@@ -56,9 +56,8 @@
       <div class="column is-10 chatColum ">
         <div class=" section columns is-mobile is-half ">
           <div class=" is-mobile is-half messagesSection">
-            <div class="box singleMessage" v-for="message in allMessages">
-              <p class="">{{ message }} <MessageBodyComponent/></p>
-
+            <div class="singleMessage" v-for="message in allMessages">
+              <Message :message="message"/>
             </div>
           </div>
         </div>
@@ -66,7 +65,7 @@
         <div class=" section columns is-mobile is-half is-centered footer-chat">
           <div class="column is-mobile is-half ">
             <div class="columns">
-              <input v-model="userMessage" class="input sendMessage" type="text">
+              <input  @keydown.enter="sendMsg"  v-model="userMessage" class="input sendMessage" type="text">
               <button @click="sendMsg(userMessage)" class="button sendMessage ">-></button>
             </div>
           </div>
@@ -77,22 +76,18 @@
 </template>
 
 <script>
-import {userConnectionMixin} from "@/userConnectionMixin";
-import MessageBodyComponent from '../components/MessageBodyComponent.vue'
+import { userConnectionMixin } from "@/userConnectionMixin";
+import Message from "../components/Message.vue";
 
 export default {
   mixins: [userConnectionMixin],
-  name: 'RoomsView',
-  components: {MessageBodyComponent},
-  props: {
-    content: String,
-    user: String,
-  },
+  name: "RoomsView",
+  components: { Message },
   mounted() {
-    this.socket.on('messageForAll', (messages) => {
+    this.socket.on("messageForAll", (messages) => {
       this.allMessages = messages;
     });
-    this.socket.on('receivedUsers', (users) => {
+    this.socket.on("receivedUsers", (users) => {
       this.allOtherUsers = users;
     });
   },
@@ -102,12 +97,11 @@ export default {
     },
     getOut() {
       this.socket.disconnect();
-      this.$router.push('/');
+      this.$router.push("/");
     }
   }
-}
+};
 </script>
-
 
 <style scoped>
 .usersColumn {
