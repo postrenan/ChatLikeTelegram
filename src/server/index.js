@@ -18,30 +18,36 @@ io.on("connection", (socket) => {
     if (!nickname.includes(users.name)) {
       users.push({ id: socket.id, name: nickname });
       socket.emit("userValidation", true);
-      if (messages.length > 0) {
-        socket.emit("messageForAll", messages);
-      }
+      if (messages.length > 0) socket.emit("messageForAll", messages);
       io.emit("receivedUsers", users);
       return;
     }
     socket.emit("userValidation", false);
   });
 
+  io.on("roomSelect", (room) => {
+    if(room === 1) socket.join("general");
+    if(room === 2) socket.join("offTopic");
+  });
+
+  io.on("createRoom", (roomName) => {
+      socket.join(roomName);
+  });
+
   socket.on("userMessage", (message) => {
     let user = users.find(users => users.id === socket.id);
-    if (message !== "") {
-      messages.push({ content: message, timer: new Date(hour, minute), user: user.name});
-      io.emit("messageForAll", messages);
-    }
+    if (!message) return;
+    let date = new Date();
+    messages.push({ content: message, timer: date.getHours() + ":" + date.getMinutes(), user: user.name });
+    io.emit("messageForAll", messages);
   });
 
   socket.on("disconnect", () => {
     let user = users.find(users => users.id === socket.id);
     if (!user) return;
     let name = user.name;
-    let message = `O usuario ${name} deixou o chat`;
-    let time = socket.time;
-    messages.push(message);
+    let date = new Date();
+    messages.push({ content: `O usuario ${name} deixou o chat`, timer: date.getHours() + ":" + date.getMinutes(), user: 'Tio zuk' });
     io.emit("messageForAll", messages);
     users = users.filter(users => users.id !== socket.id);
     io.emit("receivedUsers", users);
