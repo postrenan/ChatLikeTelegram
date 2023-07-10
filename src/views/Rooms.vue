@@ -55,6 +55,9 @@
             <div class="singleMessage" v-for="message in allMessages">
               <MessageChat :message="message" />
             </div>
+            <div v-if="myMessage" class="singleMessage MyMessage">
+              <MessageChat :message="message" />
+            </div>
           </div>
         </div>
         <div class=" section columns is-mobile is-half is-centered footer-chat">
@@ -112,6 +115,10 @@ export default {
   border-radius: 50px;
   background-color: #50f550;
 
+}
+
+.MyMessage{
+  background-color: #50f550;
 }
 
 .onlineUsersName{

@@ -38,7 +38,7 @@ io.on("connection", (socket) => {
     let user = users.find(users => users.id === socket.id);
     if (!message) return;
     let date = new Date();
-    messages.push({ content: message, timer: date.getHours() + ":" + date.getMinutes(), user: user.name });
+    messages.push({ content: message, timer: date.getHours() + ":" + date.getMinutes(), user: user.name, id: user.id });
     io.emit("messageForAll", messages);
   });
 
@@ -47,7 +47,7 @@ io.on("connection", (socket) => {
     if (!user) return;
     let name = user.name;
     let date = new Date();
-    messages.push({ content: `O usuario ${name} deixou o chat`, timer: date.getHours() + ":" + date.getMinutes(), user: 'Tio zuk' });
+    messages.push({ content: `O usuario ${name} deixou o chat`, timer: date.getHours() + ":" + date.getMinutes(), user: 'Tio zuk'});
     io.emit("messageForAll", messages);
     users = users.filter(users => users.id !== socket.id);
     io.emit("receivedUsers", users);

@@ -1,8 +1,8 @@
 <template>
   <div class="app">
     <div class="section columns is-mobile is-half is-centered columnBackground">
-      <div class="columns is-mobile is-half is-vcentered cardInput">
-        <div class="column is-vcentered box">
+      <div class="columns is-mobile is-half is-centered cardInput">
+        <div class="column is-mobile has-text-centered is-center box">
           <h2 class="title">Digite um apelido</h2>
           <input  @keyup.enter="login(nickname)" class="input is-rounded column" v-model="nickname" type="text" />
           <button class="button is-rounded " @click="login(nickname)">Entrar</button>
@@ -57,12 +57,16 @@ export default {
 }
 
 .cardInput{
-  margin-top: 200px;
+  margin-top: 300px;
+}
+
+input{
+  border: black solid 1px;
 }
 
 button{
   background-color: darkcyan;
-  margin-top: 5px;
+  margin-top: 15px;
   color: white;
   border-radius: 50px;
   border: none;

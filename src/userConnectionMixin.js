@@ -21,11 +21,12 @@ export const userConnectionMixin = {
       rooms:['general', 'off-topic', ],
       createRooms: [],
       roomName:"",
+      myMessage: false,
     };
   },
   mounted() {
     this.socket.on("messageForAll", (messages) => {
-      this.allMessages = messages;
+        this.allMessages = messages;
     });
     this.socket.on("receivedUsers", (users) => {
       this.allOtherUsers = users;

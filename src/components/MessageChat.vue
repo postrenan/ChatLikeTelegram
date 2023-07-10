@@ -4,6 +4,11 @@
       <p class="subtitle userMessage">{{ message.content }}</p>
       <p class="has-text-right userTime subtitle">{{ message.timer }}</p>
     </div>
+  <div class="box">
+    <p class="subtitle userName">{{ message.user }}</p>
+    <p class="subtitle userMessage">{{ message.content }}</p>
+    <p class="has-text-right userTime subtitle">{{ message.timer }}</p>
+  </div>
 </template>
 
 <script>
@@ -19,8 +24,9 @@ export default {
     message: Object
   },
   mounted(){
-    this.users = this.message.user
+    if(this.message.id === socket.id){
 
+    }
   },
   methods: {
   },
