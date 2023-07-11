@@ -11,6 +11,7 @@ const io = new Server(server, {
 
 let users = [];
 const messages = [];
+let rooms = ["general", "off-topic"];
 //socket. envia para o remetente
 //io. envia para todos
 io.on("connection", (socket) => {
@@ -20,26 +21,31 @@ io.on("connection", (socket) => {
       socket.emit("userValidation", true);
       if (messages.length > 0) socket.emit("messageForAll", messages);
       io.emit("receivedUsers", users);
+      io.emit("receivedRooms", rooms)
+      socket.join("general");
       return;
     }
     socket.emit("userValidation", false);
   });
 
-  io.on("roomSelect", (room) => {
-    if(room === 1) socket.join("general");
-    if(room === 2) socket.join("offTopic");
+  socket.on("roomSelect", (room) => {
+    console.log(room)
+    socket.join(room);
   });
 
-  io.on("createRoom", (roomName) => {
-      socket.join(roomName);
+  socket.on("createRoom", (roomName) => {
+    if (rooms.includes(roomName)) return;
+    rooms.push(roomName);
+    socket.emit("reciveNewRoomConfirmation", true);
+    io.emit("receivedRooms", rooms);
   });
 
-  socket.on("userMessage", (message) => {
+  socket.on("userMessage", (data) => {
     let user = users.find(users => users.id === socket.id);
-    if (!message) return;
+    if (!data.content) return;
     let date = new Date();
-    messages.push({ content: message, timer: date.getHours() + ":" + date.getMinutes(), user: user.name, id: user.id });
-    io.emit("messageForAll", messages);
+    messages.push({ content: data.content, timer: date.getHours() + ":" + date.getMinutes(), user: user.name, id: user.id });
+    io.to(data.room).emit("messageForAll", messages);
   });
 
   socket.on("disconnect", () => {
@@ -47,7 +53,11 @@ io.on("connection", (socket) => {
     if (!user) return;
     let name = user.name;
     let date = new Date();
-    messages.push({ content: `O usuario ${name} deixou o chat`, timer: date.getHours() + ":" + date.getMinutes(), user: 'Tio zuk'});
+    messages.push({
+      content: `O usuario ${name} deixou o chat`,
+      timer: date.getHours() + ":" + date.getMinutes(),
+      user: "Tio zuk"
+    });
     io.emit("messageForAll", messages);
     users = users.filter(users => users.id !== socket.id);
     io.emit("receivedUsers", users);

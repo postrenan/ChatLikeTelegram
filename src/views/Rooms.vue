@@ -16,8 +16,11 @@
           <div class="section is-mobile is-half is-vcentered usersOnline">
             <div class=" is-mobile is-half has-text-centered">
               <div class="userOnline is-mobile">
-                 <div class="onlineUsersName" v-for="user in allOtherUsers">
-                   <p class="usersNameBox"><div class="onlineCircle"/>{{ user.name }}</p>
+                <div class="onlineUsersName" v-for="user in allOtherUsers">
+                  <p class="usersNameBox">
+                    <div class="onlineCircle" />
+                    {{ user.name }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -32,11 +35,11 @@
           <div class="section is-mobile is-half is-vcentered avalibleRoom">
             <div class=" is-mobile is-half has-text-centered">
               <div v-for="room in rooms">
-                <button @click="roomJoin(general)" class="button is-rounded chatButtons">{{room}}</button>
+                <button @click="roomJoin(room)" class="button is-rounded chatButtons">{{ room }}</button>
               </div>
 
               <div>
-                <button @click="roomJoin(create)" class="button is-rounded createRoom">Criar sala</button>
+                <button @click="createRoom()" class="button is-rounded createRoom">Criar sala</button>
               </div>
             </div>
           </div>
@@ -73,19 +76,26 @@
   </div>
 </template>
 
+
 <script>
 import { userConnectionMixin } from "@/userConnectionMixin";
 import MessageChat from "../components/MessageChat.vue";
+
+//TODO USAR WIDTH 100% NO CHAT E USAR O ALIGN LEFT E RIGHT PARA ORDENAR AS MENSAGENS DOS USUARIOS
+//TODO FAZER UMA FUNÇÃO QUE GUARDA VALOR DE COR PRA NOME DE USUARIO PARA CADA UM
+
+
 export default {
   mixins: [userConnectionMixin],
   name: "RoomsView",
-  components: { MessageChat },
+  components: { MessageChat }
 };
 </script>
 
 <style scoped>
-.columnsBack{
+.columnsBack {
   margin-top: 0;
+  background-color: #00000082;
 }
 
 .usersColumn {
@@ -109,7 +119,7 @@ export default {
   color: #50f550;
 }
 
-.onlineCircle{
+.onlineCircle {
   height: 5px;
   width: 5px;
   border-radius: 50px;
@@ -117,11 +127,11 @@ export default {
 
 }
 
-.MyMessage{
+.MyMessage {
   background-color: #50f550;
 }
 
-.onlineUsersName{
+.onlineUsersName {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -130,7 +140,7 @@ export default {
 
 .userOnline {
   display: flex;
-  flex-direction: column ;
+  flex-direction: column;
   padding: 10px;
   border: white solid 2px;
   border-radius: 20px;
@@ -141,27 +151,27 @@ export default {
   overflow: auto;
 }
 
-.avalibleRoom{
+.avalibleRoom {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 15px;
   padding-block: 10px;
-  max-height: 280px;
+  max-height: 380px;
   overflow-y: auto;
 }
 
-.createRoom , .chatButtons , .logoutButton{
+.createRoom, .chatButtons, .logoutButton {
   width: 100%;
   max-width: 80px;
   overflow: hidden;
 }
 
-.chatButtons{
+.chatButtons {
   margin: 5px;
 }
 
-.createRoom{
+.createRoom {
   color: black;
   margin-top: 20px;
   background-color: deepskyblue;
@@ -178,11 +188,11 @@ export default {
   height: 100vh;
 }
 
-.logout{
+.logout {
   margin-top: 40px;
 }
 
-.logoutButton{
+.logoutButton {
   background-color: darkred;
   color: white;
 }

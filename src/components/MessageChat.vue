@@ -1,13 +1,12 @@
 <template>
+  <div>
+
+
     <div class="box">
       <p class="subtitle userName">{{ message.user }}</p>
       <p class="subtitle userMessage">{{ message.content }}</p>
       <p class="has-text-right userTime subtitle">{{ message.timer }}</p>
     </div>
-  <div class="box">
-    <p class="subtitle userName">{{ message.user }}</p>
-    <p class="subtitle userMessage">{{ message.content }}</p>
-    <p class="has-text-right userTime subtitle">{{ message.timer }}</p>
   </div>
 </template>
 
@@ -17,38 +16,38 @@ export default {
   data() {
     return {
       users: [],
-      message: [],
-    }
+      message: []
+    };
   },
   props: {
     message: Object
   },
-  mounted(){
-    if(this.message.id === socket.id){
-
-    }
+  mounted() {
+    this.users = this.message.user
+    // if (this.message.id === socket.id) {
+    //
+    // }
   },
-  methods: {
-  },
-}
+  methods: {}
+};
 </script>
 
 <style scoped>
 
-.userMessage{
+.userMessage {
   margin: 0;
 }
 
-.userName{
+.userName {
   color: deepskyblue;
   margin: 0;
 }
 
-.userTime{
+.userTime {
   font-size: 15px;
 }
 
-.box{
+.box {
   margin: 5px;
   padding-block: 5px;
 }
