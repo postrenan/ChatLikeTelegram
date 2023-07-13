@@ -37,7 +37,6 @@
               <div v-for="room in rooms">
                 <button @click="roomJoin(room)" class="button is-rounded chatButtons">{{ room }}</button>
               </div>
-
               <div>
                 <button @click="createRoom()" class="button is-rounded createRoom">Criar sala</button>
               </div>
@@ -47,18 +46,16 @@
         <div class="logout">
           <div class=" section columns is-mobile is-half is-vcentered roomText">
             <div class="column has-text-centered has-text-light ">
-              <button @click="getOut()" class="button is-rounded logoutButton">Logout</button>
+              <button @click="getOut(userRoom)" class="button is-rounded logoutButton">Logout</button>
             </div>
           </div>
         </div>
       </div>
       <div class="column is-10 chatColum ">
-        <div class=" section columns is-mobile is-half ">
-          <div class=" is-mobile is-half messagesSection">
+        <span class="has-text-light">Voce está na sala {{ userRoom }}</span>
+        <div class=" section onlyChat">
+          <div class="messagesSection">
             <div class="singleMessage" v-for="message in allMessages">
-              <MessageChat :message="message" />
-            </div>
-            <div v-if="myMessage" class="singleMessage MyMessage">
               <MessageChat :message="message" />
             </div>
           </div>
@@ -67,7 +64,7 @@
           <div class="column is-mobile is-half ">
             <div class="columns">
               <input @keydown.enter="sendMsg" v-model="userMessage" class="input sendMessage" type="text">
-              <button @click="sendMsg(userMessage)" class="button sendMessage ">-></button>
+              <button @click="sendMsg(userMessage)" class="button sendMessageButton ">-></button>
             </div>
           </div>
         </div>
@@ -80,10 +77,6 @@
 <script>
 import { userConnectionMixin } from "@/userConnectionMixin";
 import MessageChat from "../components/MessageChat.vue";
-
-//TODO USAR WIDTH 100% NO CHAT E USAR O ALIGN LEFT E RIGHT PARA ORDENAR AS MENSAGENS DOS USUARIOS
-//TODO FAZER UMA FUNÇÃO QUE GUARDA VALOR DE COR PRA NOME DE USUARIO PARA CADA UM
-
 
 export default {
   mixins: [userConnectionMixin],
@@ -124,11 +117,6 @@ export default {
   width: 5px;
   border-radius: 50px;
   background-color: #50f550;
-
-}
-
-.MyMessage {
-  background-color: #50f550;
 }
 
 .onlineUsersName {
@@ -136,6 +124,11 @@ export default {
   align-items: center;
   justify-content: center;
   gap: 5px;
+}
+
+.onlyChat {
+  max-width: 100%;
+  max-height: 800px;
 }
 
 .userOnline {
@@ -202,7 +195,7 @@ export default {
 }
 
 .messagesSection {
-  max-height: 800px;
+  max-height: 700px;
   overflow: auto;
 }
 
@@ -225,4 +218,11 @@ export default {
   background-color: black;
   color: white;
 }
+
+.sendMessageButton {
+  background-color: black;
+  color: white;
+  margin-left: 10px;
+}
+
 </style>

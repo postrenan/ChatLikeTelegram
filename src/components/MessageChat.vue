@@ -1,34 +1,32 @@
 <template>
   <div>
-
-
-    <div class="box">
+    <div class="box onlyMessage">
       <p class="subtitle userName">{{ message.user }}</p>
-      <p class="subtitle userMessage">{{ message.content }}</p>
+      <p class="subtitle userMessage" >{{ message.content }}</p>
       <p class="has-text-right userTime subtitle">{{ message.timer }}</p>
     </div>
   </div>
 </template>
 
 <script>
+import { userConnectionMixin } from "@/userConnectionMixin";
 
 export default {
-  data() {
-    return {
-      users: [],
-      message: []
-    };
-  },
+  mixins: [userConnectionMixin],
   props: {
-    message: Object
+    message: Object,
+  },
+  data(){
+    return{
+      personal: false,
+    }
   },
   mounted() {
-    this.users = this.message.user
-    // if (this.message.id === socket.id) {
-    //
-    // }
-  },
-  methods: {}
+    if (this.message.id === this.socket.id) {
+    let userMessage = document.getElementsByClassName('onlyMessage');
+    console.log('aaaa');
+    }
+  }
 };
 </script>
 

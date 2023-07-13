@@ -2,26 +2,17 @@ import io from "socket.io-client";
 
 const socket = io("127.0.0.1:3000");
 export const userConnectionMixin = {
+
     data() {
       return {
         socket,
         userMessage: "",
         allMessages: [],
-        roomMessage: [{
-          room: "",
-          content: ""
-        }],
-        name: "",
-        users: "",
         person: document.cookie,
         allOtherUsers: [],
-        user: String,
-        time: null,
-        message: String,
-        create: 3,
         rooms: [],
         roomName: "",
-        userRoom: "",
+        userRoom: "general",
         myMessage: false
       };
     },
@@ -46,8 +37,8 @@ export const userConnectionMixin = {
         this.socket.emit("userMessage", data);
         this.userMessage = "";
       },
-      getOut() {
-        this.socket.disconnect();
+      getOut(room){
+        this.socket.disconnect(room);
         this.$router.push("/");
       },
       createRoom() {
@@ -63,9 +54,9 @@ export const userConnectionMixin = {
         });
       },
       roomJoin(room) {
+        if (room === this.userRoom) return;
         this.socket.emit("roomSelect", room);
         this.userRoom = room;
-
       }
     }
 
