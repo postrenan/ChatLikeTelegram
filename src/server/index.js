@@ -8,7 +8,7 @@ const io = new Server(server, {
     origin: "*", methods: ["GET", "POST"]
   }
 });
-
+let userName = [];
 let users = [];
 const messages = [];
 let rooms = ["general", "off-topic"];
@@ -18,7 +18,9 @@ io.on("connection", (socket) => {
   //conecta aos sockets o usuario
 
   socket.on("userLogin", (nickname) => {
-    if (!nickname.includes(users.name)) {
+
+    if (!userName.includes(nickname)) {
+      userName.push(nickname);
       users.push({ id: socket.id, name: nickname });
       socket.emit("userValidation", true);
       if (messages.length > 0) socket.emit("messageForAll", messages);
@@ -41,8 +43,8 @@ io.on("connection", (socket) => {
       timer: date.getHours() + ":" + date.getMinutes(),
       user: "Sistema",
       room : room,
+      userId: socket.id,
     });
-    console.log( room);
     io.to(room).emit("messageForAll", messages.filter(message => message.room === room));
   });
 
@@ -64,7 +66,6 @@ io.on("connection", (socket) => {
       id: user.id,
       room: data.room
     });
-    console.log( data.room);
     io.to(data.room).emit("messageForAll", messages.filter(message => message.room === data.room));
   });
 

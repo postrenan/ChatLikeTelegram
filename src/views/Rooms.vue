@@ -55,7 +55,7 @@
         <span class="has-text-light">Voce está na sala {{ userRoom }}</span>
         <div class=" section onlyChat">
           <div class="messagesSection">
-            <div class="singleMessage" v-for="message in allMessages">
+            <div class="singleMessage"  v-for="message in allMessages">
               <MessageChat :message="message" />
             </div>
           </div>
@@ -197,11 +197,11 @@ export default {
 .messagesSection {
   max-height: 700px;
   overflow: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .singleMessage {
-  padding-right: 200px;
-  overflow: clip;
   white-space: nowrap;
 }
 

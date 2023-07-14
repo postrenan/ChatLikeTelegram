@@ -13,12 +13,18 @@ export const userConnectionMixin = {
         rooms: [],
         roomName: "",
         userRoom: "general",
-        myMessage: false
+        myMessage: false,
+        personal: false,
+        userAllMessage: [],
       };
     },
     mounted() {
       this.socket.on("messageForAll", (messages) => {
-        this.allMessages = messages;
+
+        console.log( this.userAllMessage = messages.map(messages => messages.id === this.socket.id));
+        if(this.userAllMessage){
+          this.allMessages = messages
+        }
       });
       this.socket.on("receivedUsers", (users) => {
         this.allOtherUsers = users;

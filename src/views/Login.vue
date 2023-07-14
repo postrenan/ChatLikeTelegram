@@ -42,6 +42,8 @@ export default {
           document.cookie = `${nickname}`;
           this.$router.push("/salas");
         }
+        this.erro = "não é aceito vazio ou nicks que já existem";
+        this.nickname  = "";
       });
     }
   }
