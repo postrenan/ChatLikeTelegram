@@ -1,9 +1,9 @@
 <template>
-  <div class="messageBox" id="allMessage">
-    <div class="box message is-mobile"  >
+  <div class="messageBox" id="allMessage" :class="{ 'boxMessage': message.id === socket.id }">
+    <div class="box message is-mobile">
       <p class="subtitle userName" >{{ message.user }}</p>
       <p class="subtitle userMessage" >{{ message.content }}</p>
-      <p class="has-text-right userTime">{{ message.timer }}</p>
+      <p class="userTime">{{ message.timer }}</p>
     </div>
   </div>
 </template>
@@ -21,26 +21,32 @@ export default {
       personal: false,
     }
   },
-  created() {
-    // if(this.message.id === this.socket.id){
-    //   let b = document.getElementById("allMessage");
-    //   b.setAttribute("style", "justify-content: end;");
-    // }
-  }
 };
 </script>
 
 <style scoped>
-
 .messageBox{
   display: flex;
   width: 100%;
+  justify-content: flex-start;
+}
+
+.message{
+  display: flex;
+  flex-direction: column;
+  max-width: 50%;
+}
+
+.boxMessage {
+  justify-content: flex-end;
+  align-content: flex-end;
 }
 
 .box {
   margin: 5px;
   padding-block: 5px;
-  width: 50%;
+  min-width: 300px;
+  width: auto;
   background-color: rgba(213, 199, 199, 0.76);
 }
 
@@ -56,8 +62,10 @@ export default {
 }
 
 .userTime {
+  display: flex;
   font-size: 15px;
   color: black;
+  justify-content: flex-end;
 }
 
 </style>

@@ -1,19 +1,14 @@
-<template>
+<template xmlns="http://www.w3.org/1999/html">
   <div class="app ">
     <div class="columns columnsBack">
       <div class="column is-2 usersColumn">
-        <div class=" section columns is-mobile is-half is-vcentered userWelcome">
-          <div class="column is-mobile has-text-centered has-text-light ">
-            <h2 class="box is-mobile">Olá {{ person }}</h2>
-          </div>
-        </div>
         <div class="onlineUsers">
-          <div class=" section columns is-mobile is-half is-vcentered onlineText">
+          <div class=" section columns is-mobile is-half onlineText">
             <div class="column has-text-centered has-text-light">
               <h2>Online:</h2>
             </div>
           </div>
-          <div class="section is-mobile is-half is-vcentered usersOnline">
+          <div class="section is-mobile is-half usersOnline">
             <div class=" is-mobile is-half has-text-centered">
               <div class="userOnline is-mobile">
                 <div class="onlineUsersName" v-for="user in allOtherUsers">
@@ -27,43 +22,51 @@
           </div>
         </div>
         <div class="avalibleRooms">
-          <div class=" section columns is-mobile is-half is-vcentered roomText">
+          <div class=" section columns is-mobile is-half roomText">
             <div class="column has-text-centered has-text-light ">
               <h2>Salas:</h2>
             </div>
           </div>
-          <div class="section is-mobile is-half is-vcentered avalibleRoom">
+          <div class="section is-mobile is-half avalibleRoom">
             <div class=" is-mobile is-half has-text-centered">
               <div v-for="room in rooms">
-                <button @click="roomJoin(room)" class="button is-rounded chatButtons">{{ room }}</button>
-              </div>
-              <div>
-                <button @click="createRoom()" class="button is-rounded createRoom">Criar sala</button>
+                <button @click="roomJoin(room)" class="button  chatButtons">{{ room }}</button>
               </div>
             </div>
           </div>
-        </div>
-        <div class="logout">
-          <div class=" section columns is-mobile is-half is-vcentered roomText">
-            <div class="column has-text-centered has-text-light ">
-              <button @click="getOut(userRoom)" class="button is-rounded logoutButton">Logout</button>
+          <div class="section is-mobile is-half avalibleRoom">
+            <div class=" is-mobile is-half has-text-centered">
+              <div>
+                <button @click="createRoom()" class="button is-success  createRoom">Criar sala</button>
+              </div>
+              <div>
+                <button @click="getOut(userRoom)" class="button  logoutButton">Logout</button>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="is-mobile has-text-centered has-text-light userWelcomeBox">
+              <h2 class="box has-text-centered is-mobile helloBox">Olá {{ person }}</h2>
             </div>
           </div>
         </div>
       </div>
-      <div class="column is-10 chatColum ">
-        <span class="has-text-light">Voce está na sala {{ userRoom }}</span>
+      <div class="column is-8 chatColum ">
+        <div class="columns chatAlert  ">
+          <span class=" column has-text-light">Voce está na sala {{ userRoom }}</span>
+          <span v-if="alertMessage !== '' " class="column has-text-white has-text-right" >{{alertMessage}}</span>
+        </div>
         <div class=" section onlyChat">
           <div class="messagesSection">
-            <div class="singleMessage"  v-for="message in allMessages">
+            <div v-for="message in allMessages">
               <MessageChat :message="message" />
             </div>
           </div>
         </div>
         <div class=" section columns is-mobile is-half is-centered footer-chat">
           <div class="column is-mobile is-half ">
-            <div class="columns">
-              <input @keydown.enter="sendMsg" v-model="userMessage" class="input sendMessage" type="text">
+            <div class="columns inputAndButton">
+              <input @keydown.enter="sendMsg(userMessage)" v-model="userMessage" class="input sendMessage" type="text">
               <button @click="sendMsg(userMessage)" class="button sendMessageButton ">-></button>
             </div>
           </div>
@@ -88,33 +91,38 @@ export default {
 <style scoped>
 .columnsBack {
   margin-top: 0;
-  background-color: #00000082;
+  background-color: rgba(30, 31, 34, 0.75);
 }
 
 .usersColumn {
-  background-color: hsl(250.2, 52.083333333333336%, -29.647058823529413%);
+  background-color: rgba(30, 31, 34, 0.62);
   height: 100vh;
+  padding: 20px 0 0 0;
 }
 
-.userWelcome {
-  padding: 24px 48px 0 48px;
+.helloBox{
+  font-size: 20px;
+  display: flex;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  justify-content: center;
+  margin-top: 270px;
+}
+
+.userWelcomeBox{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0;
+  margin: 0;
 }
 
 .onlineText {
   padding: 0 48px 0 48px;
-  border-top: white solid 2px;
-  border-bottom: white solid 2px;
-}
-
-.usersOnline {
-  padding: 10px;
-  margin-bottom: 10px;
-  color: #50f550;
 }
 
 .onlineCircle {
-  height: 5px;
-  width: 5px;
+  height: 8px;
+  width: 8px;
   border-radius: 50px;
   background-color: #50f550;
 }
@@ -124,24 +132,40 @@ export default {
   align-items: center;
   justify-content: center;
   gap: 5px;
+  font-size: 20px;
+}
+
+.chatColum {
+  height: 100vh;
+
+}
+
+.chatAlert{
+  padding: 12px 0 12px 0;
 }
 
 .onlyChat {
   max-width: 100%;
   max-height: 800px;
+  padding: 0 48px 0 48px;
+}
+
+.usersOnline {
+  padding: 0;
+  margin-bottom: 10px;
+  color: white;
 }
 
 .userOnline {
   display: flex;
   flex-direction: column;
   padding: 10px;
-  border: white solid 2px;
-  border-radius: 20px;
   align-items: center;
   justify-content: center;
   gap: 5px;
   max-height: 100px;
-  overflow: auto;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .avalibleRoom {
@@ -149,48 +173,47 @@ export default {
   align-items: center;
   justify-content: center;
   gap: 15px;
-  padding-block: 10px;
+  padding: 10px;
   max-height: 380px;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .createRoom, .chatButtons, .logoutButton {
+  font-size: 20px;
+
   width: 100%;
   max-width: 80px;
   overflow: hidden;
+  padding: 5px 10px 5px 10px;
 }
 
 .chatButtons {
-  margin: 5px;
+  margin: 0 40px 10px 40px;
+  padding: 0 50px 0 50px;
 }
 
 .createRoom {
+  margin: 0 40px 10px 40px;
+  padding: 0 50px 0 50px;
   color: black;
-  margin-top: 20px;
-  background-color: deepskyblue;
+  border: none;
 }
 
 .roomText {
   padding: 0 48px 0 48px;
-  border-top: white solid 2px;
-  border-bottom: white solid 2px;
 }
 
-.chatColum {
-  background-image: url('../assets/download.png');
-  height: 100vh;
-}
-
-.logout {
-  margin-top: 40px;
-}
 
 .logoutButton {
+  margin: 0 40px 10px 40px;
+  padding: 0 50px 0 50px;
   background-color: darkred;
   color: white;
+  border: none;
 }
 
-.messagesSection::-webkit-scrollbar {
+.avalibleRoom::-webkit-scrollbar {
   display: none;
 }
 
@@ -201,28 +224,59 @@ export default {
   flex-direction: column;
 }
 
-.singleMessage {
-  white-space: nowrap;
-}
-
 .footer-chat {
   width: 100%;
   margin: 0;
-  padding: 0 25% 0 48px;
+  padding: 0 35% 0 0;
   height: 70px;
   position: fixed;
   bottom: 0;
 }
 
 .sendMessage {
-  background-color: black;
-  color: white;
+  min-width: 100px;
+  background-color: #ffffff;
+  color: #000000;
 }
 
 .sendMessageButton {
-  background-color: black;
-  color: white;
+  background-color: #ffffff;
+  color: #000000;
   margin-left: 10px;
+}
+
+.inputAndButton{
+  display: flex;
+}
+
+@media only screen and (max-width: 770px){
+  .footer-chat {
+    width: 100%;
+    margin: 0;
+    padding: 0 ;
+    height: 70px;
+    position: fixed;
+    bottom: 0;
+  }
+
+  .usersColumn {
+    background-color: hsl(250.2, 52.083333333333336%, -29.647058823529413%);
+    overflow: scroll;
+    max-height: 500px;
+  }
+
+  .chatColum{
+    background-color: rgba(91, 9, 9, 0.78);
+  }
+
+  .helloBox{
+    margin-top: 50px;
+  }
+
+  .onlyChat{
+    height: 600px;
+  }
+
 }
 
 </style>

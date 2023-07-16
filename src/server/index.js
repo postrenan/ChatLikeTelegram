@@ -16,36 +16,47 @@ let rooms = ["general", "off-topic"];
 //io. envia para todos
 io.on("connection", (socket) => {
   //conecta aos sockets o usuario
-
   socket.on("userLogin", (nickname) => {
-
-    if (!userName.includes(nickname)) {
-      userName.push(nickname);
-      users.push({ id: socket.id, name: nickname });
-      socket.emit("userValidation", true);
-      if (messages.length > 0) socket.emit("messageForAll", messages);
-      io.emit("receivedUsers", users);
-      io.emit("receivedRooms", rooms);
-      socket.join("general");
+    if (users.map((user) => user.name).includes(nickname)) {
+      socket.emit("userValidation", false);
       return;
     }
-    socket.emit("userValidation", false);
+
+    users.push({ id: socket.id, name: nickname, room: "general" });
+    socket.emit("userValidation", true);
+    if (messages.length > 0) socket.emit("messageForAll", messages);
+
+    io.emit("receivedUsers", users);
+    io.emit("receivedRooms", rooms);
+    socket.join("general");
   });
 
   socket.on("roomSelect", (room) => {
-    socket.join(room);
     let user = users.find(users => users.id === socket.id);
     if (!user) return;
     let name = user.name;
     let date = new Date();
+
     messages.push({
-      content: `O usuario ${name} entrou o chat`,
+      content: `O usuario ${name} saiu da sala`,
       timer: date.getHours() + ":" + date.getMinutes(),
       user: "Sistema",
-      room : room,
-      userId: socket.id,
+      room: user.room,
+      userId: socket.id
     });
-    io.to(room).emit("messageForAll", messages.filter(message => message.room === room));
+    socket.emit("messageForAll", messages.filter(message => message.room === user.room));
+    socket.leave(user.room);
+
+    socket.join(room);
+    user.room = room;
+    messages.push({
+      content: `O usuario ${name} entrou na sala`,
+      timer: date.getHours() + ":" + date.getMinutes(),
+      user: "Sistema",
+      room,
+      userId: socket.id
+    });
+    socket.emit("messageForAll", messages.filter(message => message.room === room));
   });
 
   socket.on("createRoom", (roomName) => {
@@ -66,6 +77,11 @@ io.on("connection", (socket) => {
       id: user.id,
       room: data.room
     });
+    let alert = {
+      user: user.name,
+      room: data.room,
+    }
+    io.emit("messageAlert", (alert));
     io.to(data.room).emit("messageForAll", messages.filter(message => message.room === data.room));
   });
 
@@ -86,5 +102,5 @@ io.on("connection", (socket) => {
   });
 });
 server.listen(3000, () => {
-  console.log("listening on *:3000");
+  console.log("No ar");
 });
